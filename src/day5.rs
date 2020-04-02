@@ -5,7 +5,6 @@ use md5;
 pub const PARTS: [fn(); 2] = [part1, part2];
 
 const INPUT: &[u8] = b"ffykfhsq";
-// const INPUT: &[u8] = b"abc";
 
 fn get_char(
     num: usize,
