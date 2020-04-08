@@ -6,7 +6,6 @@ use arrayvec::ArrayVec;
 
 pub const PARTS: [fn(); 2] = [part1, part2];
 
-// const SALT: &[u8] = b"abc";
 const SALT: &[u8] = b"yjdafjpo";
 
 fn ninarow(data: &[u8], n: usize) -> Option<u8> {
