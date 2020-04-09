@@ -10,6 +10,7 @@ dependencies = [
  "md5",
  "num",
  "regex",
+ "vec_linked_list",
 ]
 
 [[package]]
@@ -169,3 +170,8 @@ checksum = "d40c6d1b69745a6ec6fb1ca717914848da4b44ae29d9b3080cbee91d72a69b14"
 dependencies = [
  "lazy_static",
 ]
+
+[[package]]
+name = "vec_linked_list"
+version = "0.1.0"
+source = "git+https://github.com/MarcusTL12/VecLinkedList_Rust?branch=Dev#11e8f8b76f84d3c72ab51779533da8979944863d"
