@@ -7,8 +7,6 @@ use std::{
 
 use regex::Regex;
 
-// use itertools::Itertools;
-
 use arrayvec::ArrayVec;
 
 pub const PARTS: [fn(); 2] = [part1, part2];

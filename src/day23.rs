@@ -39,6 +39,7 @@ enum Instruction {
     Inc(Arg),
     Dec(Arg),
     Jnz(Arg, Arg),
+    Tgl(Arg),
 }
 
 fn load_input(filename: &str) -> Vec<Instruction> {
@@ -55,13 +56,14 @@ fn load_input(filename: &str) -> Vec<Instruction> {
                 ["jnz", x, y] => {
                     Instruction::Jnz(x.parse().unwrap(), y.parse().unwrap())
                 }
-                _ => panic!(),
+                ["tgl", x] => Instruction::Tgl(x.parse().unwrap()),
+                a => unreachable!("{:?}", a),
             },
         )
         .collect()
 }
 
-fn run_program(registers: &mut [i32], program: &[Instruction]) {
+fn run_program(registers: &mut [i32], program: &mut [Instruction]) {
     let mut i = 0;
     while i < program.len() {
         match program[i] {
@@ -73,39 +75,64 @@ fn run_program(registers: &mut [i32], program: &[Instruction]) {
             }
             Instruction::Inc(Arg::Register(x)) => registers[x] += 1,
             Instruction::Dec(Arg::Register(x)) => registers[x] -= 1,
-            Instruction::Jnz(Arg::Register(x), Arg::Value(y)) => {
-                if registers[x] != 0 {
-                    i = (i as i32 + y) as usize - 1;
-                }
-            }
-            Instruction::Jnz(Arg::Value(x), Arg::Value(y)) => {
+            Instruction::Jnz(x, y) => {
+                let x = match x {
+                    Arg::Value(x) => x,
+                    Arg::Register(x) => registers[x],
+                };
+                //
+                let y = match y {
+                    Arg::Value(x) => x,
+                    Arg::Register(x) => registers[x],
+                };
+                //
                 if x != 0 {
                     i = (i as i32 + y) as usize - 1;
                 }
             }
-            a => panic!("Unsupported instruction: {:?}", a),
+            Instruction::Tgl(arg) => {
+                let x = match arg {
+                    Arg::Value(x) => x,
+                    Arg::Register(x) => registers[x],
+                } + i as i32;
+                if x >= 0 && x < program.len() as i32 {
+                    let nins = match program[x as usize] {
+                        Instruction::Inc(x) => Instruction::Dec(x),
+                        Instruction::Dec(x) | Instruction::Tgl(x) => {
+                            Instruction::Inc(x)
+                        }
+                        Instruction::Jnz(x, y) => Instruction::Cpy(x, y),
+                        Instruction::Cpy(x, y) => Instruction::Jnz(x, y),
+                    };
+                    program[x as usize] = nins;
+                }
+            }
+            a => unreachable!("{:?}", a),
         }
         i += 1;
     }
 }
 
 fn part1() {
-    let program = load_input("inputfiles/day12/input.txt");
+    let mut program = load_input("inputfiles/day23/input.txt");
     //
     let mut registers = vec![0; 4];
     //
-    run_program(&mut registers, &program);
+    registers[0] = 7;
+    //
+    run_program(&mut registers, &mut program);
     //
     println!("{}", registers[0]);
 }
 
 fn part2() {
-    let program = load_input("inputfiles/day12/input.txt");
+    let mut program = load_input("inputfiles/day23/input.txt");
     //
     let mut registers = vec![0; 4];
-    registers[2] = 1;
     //
-    run_program(&mut registers, &program);
+    registers[0] = 12;
+    //
+    run_program(&mut registers, &mut program);
     //
     println!("{}", registers[0]);
 }
