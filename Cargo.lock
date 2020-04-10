@@ -174,4 +174,4 @@ dependencies = [
 [[package]]
 name = "vec_linked_list"
 version = "0.1.0"
-source = "git+https://github.com/MarcusTL12/VecLinkedList_Rust?branch=Dev#11e8f8b76f84d3c72ab51779533da8979944863d"
+source = "git+https://github.com/MarcusTL12/VecLinkedList_Rust?branch=Dev#1606998b5069f53d060df17b19265bfa9b38d7e6"
