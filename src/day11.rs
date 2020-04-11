@@ -1,13 +1,15 @@
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{HashMap, HashSet, VecDeque},
     fs::File,
     io::{BufRead, BufReader},
-    iter,
+    // iter,
 };
 
 use regex::Regex;
 
-use arrayvec::ArrayVec;
+use itertools::Itertools;
+
+// use arrayvec::ArrayVec;
 
 pub const PARTS: [fn(); 2] = [part1, part2];
 
@@ -95,90 +97,106 @@ fn valid_conf((_, gens, chips): &(usize, Vec<usize>, Vec<usize>)) -> bool {
         }
     }
     //
-    println!("{:?}", gens_floors);
-    println!("{:?}", chips_floors);
-    //
     !gens_floors
         .iter()
         .zip(chips_floors.iter())
         .any(|(&a, &b)| a && b)
 }
 
-fn shortest_path(
-    conf: &(usize, Vec<usize>, Vec<usize>),
-    memo: &mut HashMap<(usize, Vec<usize>, Vec<usize>), usize>,
-    in_progress: &mut HashSet<(usize, Vec<usize>, Vec<usize>)>,
-) -> usize {
-    if let Some(x) = memo.get(conf) {
-        *x
-    } else {
-        let floor_items: Vec<_> = (0..conf.1.len())
-            .flat_map(|i| {
-                iter::once((Entity::Gen(i), conf.1[i]))
-                    .chain(iter::once((Entity::Chip(i), conf.2[i])))
-            })
-            .filter(|(_, floor)| *floor == conf.0)
-            .map(|(x, _)| x)
+fn all_at_top((_, gens, chips): &(usize, Vec<usize>, Vec<usize>)) -> bool {
+    gens.iter().all(|&x| x == 3) && chips.iter().all(|&x| x == 3)
+}
+
+fn shortest_path(conf: (usize, Vec<usize>, Vec<usize>)) -> usize {
+    let mut queue = VecDeque::new();
+    queue.push_back((conf.clone(), 0));
+    //
+    let mut visited = HashSet::new();
+    visited.insert(conf);
+    //
+    while let Some((conf, len)) = queue.pop_front() {
+        let floor_items: Vec<_> = conf
+            .1
+            .iter()
+            .enumerate()
+            .filter(|(_, &i)| i == conf.0)
+            .map(|(i, _)| Entity::Gen(i))
+            .chain(
+                conf.2
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, &i)| i == conf.0)
+                    .map(|(i, _)| Entity::Chip(i)),
+            )
             .collect();
         //
-        println!("{:?}", floor_items);
+        let confs = (0..4)
+            .filter(|&i| (i as isize - conf.0 as isize).abs() == 1)
+            .flat_map(|i| {
+                let singly =
+                    floor_items.iter().map(move |x| (i, x)).map(|(i, e)| {
+                        let mut nconf = conf.clone();
+                        nconf.0 = i;
+                        match e {
+                            Entity::Gen(j) => nconf.1[*j] = i,
+                            Entity::Chip(j) => nconf.2[*j] = i,
+                        }
+                        nconf
+                    });
+                //
+                let doubly = floor_items
+                    .iter()
+                    .tuple_combinations()
+                    .map(move |x| (i, x))
+                    .map(|(i, (e1, e2))| {
+                        let mut nconf = conf.clone();
+                        nconf.0 = i;
+                        match e1 {
+                            Entity::Gen(j) => nconf.1[*j] = i,
+                            Entity::Chip(j) => nconf.2[*j] = i,
+                        }
+                        match e2 {
+                            Entity::Gen(j) => nconf.1[*j] = i,
+                            Entity::Chip(j) => nconf.2[*j] = i,
+                        }
+                        nconf
+                    });
+                //
+                singly.chain(doubly)
+            });
         //
-        let mut nconf = conf.clone();
-        //
-        let ans = (0..floor_items.len())
-            .map(|i| iter::once(i).collect::<ArrayVec<[_; 2]>>())
-            .chain((0..floor_items.len()).flat_map(|i| {
-                (i + 1..floor_items.len())
-                    .map(move |j| iter::once(i).chain(iter::once(j)).collect())
-            }))
-            .flat_map(|c| {
-                (0..4).filter(|&i| i != conf.0).map(move |i| (i, c.clone()))
-            })
-            .filter_map(|(floor, comb)| {
-                nconf.0 = floor;
-                for (a, b) in conf.1.iter().zip(nconf.1.iter_mut()) {
-                    *b = *a;
-                }
-                for (a, b) in conf.2.iter().zip(nconf.2.iter_mut()) {
-                    *b = *a;
+        for nconf in confs {
+            if valid_conf(&nconf) && !visited.contains(&nconf) {
+                if all_at_top(&nconf) {
+                    return len + 1;
                 }
                 //
-                for c in comb {
-                    match floor_items[c] {
-                        Entity::Gen(i) => nconf.1[i] = floor,
-                        Entity::Chip(i) => nconf.2[i] = floor,
-                    }
-                }
-                //
-                if valid_conf(&nconf) && !in_progress.contains(&nconf) {
-                    in_progress.insert(nconf.clone());
-                    //
-                    let ans = shortest_path(&nconf, memo, in_progress);
-                    //
-                    in_progress.remove(&nconf);
-                    Some(ans)
-                } else {
-                    None
-                }
-            })
-            .min()
-            .unwrap()
-            + 1;
-        //
-        memo.insert(conf.clone(), ans);
-        //
-        ans
+                queue.push_back((nconf.clone(), len + 1));
+                visited.insert(nconf);
+            }
+        }
     }
+    //
+    panic!("Did not find a solution!");
 }
 
 fn part1() {
-    let inp = load_input("inputfiles/day11/example1.txt");
+    let inp = load_input("inputfiles/day11/input.txt");
     //
-    let conf = (0, inp.0, inp.1);
+    let ans = shortest_path((0, inp.0, inp.1));
     //
-    let temp = shortest_path(&conf, &mut HashMap::new(), &mut HashSet::new());
-    //
-    println!("{}", temp);
+    println!("{}", ans);
 }
 
-fn part2() {}
+fn part2() {
+    let mut inp = load_input("inputfiles/day11/input.txt");
+    //
+    inp.0.push(0);
+    inp.1.push(0);
+    inp.0.push(0);
+    inp.1.push(0);
+    //
+    let ans = shortest_path((0, inp.0, inp.1));
+    //
+    println!("{}", ans);
+}
