@@ -26,12 +26,12 @@ fn get_screen() -> Vec<Vec<bool>> {
         .lines()
         .map(|l| l.unwrap())
     {
-        match l.split(' ').collect::<ArrayVec<[_; 5]>>().as_slice() {
+        match l.split(' ').collect::<ArrayVec<_, 5>>().as_slice() {
             ["rect", x] => {
                 if let [Ok(a), Ok(b)] = x
                     .split('x')
                     .map(|s| s.parse())
-                    .collect::<ArrayVec<[_; 2]>>()
+                    .collect::<ArrayVec<_, 2>>()
                     .as_slice()
                 {
                     for i in 0..*b {
@@ -52,7 +52,7 @@ fn get_screen() -> Vec<Vec<bool>> {
                         .skip(amt)
                         .zip(0..ROWS)
                         .map(|(i, j)| (i, screen[j][colnr]))
-                        .collect::<ArrayVec<[_; ROWS]>>()
+                        .collect::<ArrayVec<_, ROWS>>()
                     {
                         screen[i][colnr] = v;
                     }
@@ -67,7 +67,7 @@ fn get_screen() -> Vec<Vec<bool>> {
                         .skip(amt)
                         .zip(0..COLS)
                         .map(|(i, j)| (i, screen[rownr][j]))
-                        .collect::<ArrayVec<[_; COLS]>>()
+                        .collect::<ArrayVec<_, COLS>>()
                     {
                         screen[rownr][i] = v;
                     }

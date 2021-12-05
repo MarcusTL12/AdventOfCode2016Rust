@@ -17,7 +17,7 @@ fn part1() {
         .lines()
         .map(|l| l.unwrap())
     {
-        match l.split(' ').collect::<ArrayVec<[_; 7]>>().as_slice() {
+        match l.split(' ').collect::<ArrayVec<_, 7>>().as_slice() {
             ["swap", "position", x, "with", "position", y] => {
                 v.swap(x.parse().unwrap(), y.parse().unwrap());
             }
@@ -108,7 +108,7 @@ fn part2() {
         .into_iter()
         .rev()
     {
-        match l.split(' ').collect::<ArrayVec<[_; 7]>>().as_slice() {
+        match l.split(' ').collect::<ArrayVec<_, 7>>().as_slice() {
             ["swap", "position", x, "with", "position", y] => {
                 v.swap(x.parse().unwrap(), y.parse().unwrap());
             }

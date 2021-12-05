@@ -18,7 +18,7 @@ const DIRS: [Complex<i32>; 4] = [
 const DIRCODES: [u8; 4] = [b'U', b'D', b'L', b'R'];
 
 fn doors<T: AsRef<[u8]>>(data: T) -> impl Iterator<Item = bool> {
-    let mut a = ArrayVec::<[_; 4]>::new();
+    let mut a = ArrayVec::<_, 4>::new();
     //
     write!(&mut a, "{:x}", md5::compute(data)).unwrap_err();
     //
@@ -34,7 +34,7 @@ fn open(p: Complex<i32>, data: &[u8]) -> [bool; 4] {
         .iter()
         .zip(doors(data))
         .map(|(&a, b)| a && b)
-        .collect::<ArrayVec<[_; 4]>>()
+        .collect::<ArrayVec<_, 4>>()
         .into_inner()
         .unwrap()
 }

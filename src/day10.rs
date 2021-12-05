@@ -33,7 +33,7 @@ fn load_input(filename: &str) -> HashMap<EntityId, EntityMap> {
         .lines()
         .map(|l| l.unwrap())
         .fold(HashMap::new(), |mut map, l| {
-            match l.split(' ').collect::<ArrayVec<[_; 12]>>().as_slice() {
+            match l.split(' ').collect::<ArrayVec<_, 12>>().as_slice() {
                 ["value", v, _, _, t, n] => match *t {
                     "bot" => {
                         let bot = EntityId::Bot(n.parse().unwrap());
@@ -90,12 +90,12 @@ fn load_input(filename: &str) -> HashMap<EntityId, EntityMap> {
 
 fn get_val(
     map: &HashMap<EntityId, EntityMap>,
-    memo: &mut HashMap<EntityId, ArrayVec<[u32; 2]>>,
+    memo: &mut HashMap<EntityId, ArrayVec<u32, 2>>,
     id: EntityId,
-) -> ArrayVec<[u32; 2]> {
+) -> ArrayVec<u32, 2> {
     fn valmatch(
         map: &HashMap<EntityId, EntityMap>,
-        memo: &mut HashMap<EntityId, ArrayVec<[u32; 2]>>,
+        memo: &mut HashMap<EntityId, ArrayVec<u32, 2>>,
         v: EntityVal,
     ) -> u32 {
         match v {

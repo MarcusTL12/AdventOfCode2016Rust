@@ -7,10 +7,10 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-num = "0.4.0"
-lazy_static = "1.4.0"
-arrayvec = "0.7.1"
-itertools = "0.10.1"
-regex = "1.5.4"
-md5 = "0.7.0"
+num = "0.4"
+lazy_static = "1.4"
+arrayvec = "0.7"
+itertools = "0.10"
+regex = "1.5"
+md5 = "0.7"
 vec_linked_list = {git = "https://github.com/MarcusTL12/VecLinkedList_Rust", branch = "Dev"}

@@ -55,7 +55,7 @@ fn ninarow2(data: &[u8], n: usize, spec: u8) -> bool {
 
 fn part1() {
     let mut buf1 = Vec::new();
-    let mut buf2 = ArrayVec::<[_; 32]>::new();
+    let mut buf2 = ArrayVec::<_, 32>::new();
     //
     let mut hashes = VecDeque::with_capacity(1001);
     //
@@ -100,7 +100,7 @@ fn part1() {
 fn hash_stretch(
     data: usize,
     buf: &mut Vec<u8>,
-    target: &mut ArrayVec<[u8; 32]>,
+    target: &mut ArrayVec<u8, 32>,
 ) {
     buf.clear();
     buf.extend(SALT.iter());
@@ -115,7 +115,7 @@ fn hash_stretch(
 
 fn part2() {
     let mut buf1 = Vec::new();
-    let mut buf2 = ArrayVec::<[_; 32]>::new();
+    let mut buf2 = ArrayVec::<_, 32>::new();
     //
     let mut hashes = VecDeque::with_capacity(1001);
     //

@@ -17,7 +17,7 @@ fn part1() {
             if let Ok(v) = l
                 .split_whitespace()
                 .map(|n| n.parse::<u32>().unwrap())
-                .collect::<ArrayVec<[_; 3]>>()
+                .collect::<ArrayVec<_, 3>>()
                 .into_inner()
             {
                 let s: u32 = v.iter().sum();
@@ -42,18 +42,18 @@ fn part2() {
                 .map(|l| {
                     l.split_whitespace()
                         .map(|n| n.parse::<u32>().unwrap())
-                        .collect::<ArrayVec<_>>()
+                        .collect::<ArrayVec<_, 3>>()
                         .into_inner()
                         .unwrap()
                 })
-                .collect::<ArrayVec<_>>()
+                .collect::<ArrayVec<_, 3>>()
                 .into_inner()
                 .unwrap();
             //
             (0..3).map(move |i| -> [u32; 3] {
                 (0..3)
                     .map(|j| lines[j][i])
-                    .collect::<ArrayVec<_>>()
+                    .collect::<ArrayVec<_, 3>>()
                     .into_inner()
                     .unwrap()
             })

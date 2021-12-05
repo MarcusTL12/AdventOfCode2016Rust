@@ -48,7 +48,7 @@ fn load_input(filename: &str) -> Vec<Instruction> {
         .lines()
         .map(|l| l.unwrap())
         .map(
-            |l| match l.split(' ').collect::<ArrayVec<[_; 3]>>().as_slice() {
+            |l| match l.split(' ').collect::<ArrayVec<_, 3>>().as_slice() {
                 ["cpy", x, y] => {
                     Instruction::Cpy(x.parse().unwrap(), y.parse().unwrap())
                 }
@@ -153,4 +153,6 @@ fn part1() {
     println!("{}", ans);
 }
 
-fn part2() {}
+fn part2() {
+    println!("Merry Codemas!");
+}

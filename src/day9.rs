@@ -38,7 +38,7 @@ fn part1() {
                             if let [Ok(a), Ok(b)] = tag_buf
                                 .split('x')
                                 .map(|n| n.parse())
-                                .collect::<ArrayVec<[_; 2]>>()
+                                .collect::<ArrayVec<_, 2>>()
                                 .as_slice()
                             {
                                 *tag_data = (*a, *b);
@@ -93,7 +93,7 @@ fn multi_pass_len<T: Iterator<Item = char>>(s: T) -> usize {
                         if let [Ok(a), Ok(b)] = tag_buf
                             .split('x')
                             .map(|n| n.parse())
-                            .collect::<ArrayVec<[_; 2]>>()
+                            .collect::<ArrayVec<_, 2>>()
                             .as_slice()
                         {
                             *tag_data = (*a, *b);

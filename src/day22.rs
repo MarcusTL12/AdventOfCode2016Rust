@@ -33,9 +33,9 @@ fn load_input(filename: &str) -> Vec<Vec<[usize; 3]>> {
         .map(|l| l.unwrap())
         .map(|l| {
             if let Some(c) = REG.captures(&l) {
-                let nums = (1..)
+                let nums = (1..=5)
                     .map(|i| c[i].parse::<usize>().unwrap())
-                    .collect::<ArrayVec<[_; 5]>>();
+                    .collect::<ArrayVec<_, 5>>();
                 //
                 let ind = (nums[0], nums[1]);
                 let data = [nums[2], nums[3], nums[4]];
@@ -103,4 +103,5 @@ fn part2() {
     //
     _show_grid(&inp);
     // Then solved by hand
+    println!("I appearently solved this by hand at this point");
 }

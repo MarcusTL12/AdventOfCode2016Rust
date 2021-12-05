@@ -77,7 +77,7 @@ fn part1() {
                 if let Ok([a, b]) = l
                     .split('-')
                     .map(|n| n.parse().unwrap())
-                    .collect::<ArrayVec<[_; 2]>>()
+                    .collect::<ArrayVec<_, 2>>()
                     .into_inner()
                 {
                     (a, b)
@@ -102,7 +102,7 @@ fn part2() {
                 if let Ok([a, b]) = l
                     .split('-')
                     .map(|n| n.parse().unwrap())
-                    .collect::<ArrayVec<[_; 2]>>()
+                    .collect::<ArrayVec<_, 2>>()
                     .into_inner()
                 {
                     (a, b)
